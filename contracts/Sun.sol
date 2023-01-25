@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.14;
 
-contract SunToken {
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
+contract SunToken is IERC20 {
     mapping(address => uint256) private _balances; // 0
 
     mapping(address => mapping(address => uint256)) private _allowances; // 1
@@ -37,7 +39,7 @@ contract SunToken {
         return _symbol;
     }
 
-    function decimals() public view returns (uint8) {
+    function decimals() public pure returns (uint8) {
         return 18;
     }
 
