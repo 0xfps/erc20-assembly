@@ -13,8 +13,6 @@ contract SunToken is IERC20 {
     string private _name; // 3
     string private _symbol; // 4
 
-
-    // constructor(string memory name_, string memory symbol_) {
     constructor() {
         string memory name_ = "FPS";
         string memory symbol_ = "SOL";
@@ -27,7 +25,7 @@ contract SunToken is IERC20 {
             sstore(4, mload(add(symbol_, 0x20)))
         }
 
-        _balances[msg.sender] = 2000;
+        _mint(msg.sender, 5000);
         approve(0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2, 1000);
     }
 
