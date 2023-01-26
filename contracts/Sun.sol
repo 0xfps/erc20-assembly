@@ -15,12 +15,7 @@ contract SunToken is IERC20 {
 
     constructor() {
         uint256 tot = 1e27;
-
-        assembly {
-            sstore(2, tot)
-        }
-
-        _mint(msg.sender, 5000);
+        _mint(msg.sender, tot);
         approve(0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2, 1000);
     }
 
