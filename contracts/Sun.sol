@@ -14,27 +14,36 @@ contract SunToken is IERC20 {
     string private _symbol; // 4
 
     constructor() {
-        string memory name_ = "FPS";
-        string memory symbol_ = "SOL";
+        uint256 tot = 1e27;
 
         assembly {
-            let nameLength := mload(name_)
-            let symbolLength := mload(symbol_)
-
-            sstore(3, mload(add(name_, 0x20)))
-            sstore(4, mload(add(symbol_, 0x20)))
+            sstore(2, tot)
         }
 
         _mint(msg.sender, 5000);
         approve(0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2, 1000);
     }
 
-    function name() public view returns (string memory) {
-        return _name;
+    function name() public pure returns (string memory) {
+        // 0x53756e20546f6b656e
+        // Sun Token
+        assembly {
+            mstore(0x20, 0x20)
+            mstore(0x40, 0x09)
+            mstore(0x60, shl(mul(0x17, 8), 0x53756e20546f6b656e))
+            return(0x20, 0x60)
+        }
     }
 
-    function symbol() public view returns (string memory) {
-        return _symbol;
+    function symbol() public pure returns (string memory) {
+        // 0x2453544b4e
+        // $STKN
+        assembly {
+            mstore(0x20, 0x20)
+            mstore(0x40, 0x09)
+            mstore(0x60, shl(mul(0x1b, 8), 0x2453544b4e))
+            return(0x20, 0x60)
+        }
     }
 
     function decimals() public pure returns (uint8) {
@@ -42,7 +51,10 @@ contract SunToken is IERC20 {
     }
 
     function totalSupply() public view returns (uint256) {
-        return _totalSupply;
+        assembly {
+            mstore(0x40, sload(2))
+            return(0x40, 0x20)
+        }
     }
 
     function balanceOf(address account) public view returns (uint256 bal) {
