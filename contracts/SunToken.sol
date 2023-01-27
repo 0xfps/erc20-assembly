@@ -35,7 +35,7 @@ contract SunToken is IERC20 {
         // $STKN
         assembly {
             mstore(0x20, 0x20)
-            mstore(0x40, 0x09)
+            mstore(0x40, 0x05)
             mstore(0x60, shl(mul(0x1b, 8), 0x2453544b4e))
             return(0x20, 0x60)
         }
