@@ -35,7 +35,7 @@ contract SunToken is IERC20 {
         assembly {
             mstore(0x0, 0x20)
             mstore(0x25, 0x052453544b4e)
-            return(0x20, 0x60)
+            return(0x0, 0x60)
         }
     }
 
@@ -45,8 +45,8 @@ contract SunToken is IERC20 {
 
     function totalSupply() public view returns (uint256) {
         assembly {
-            mstore(0x40, sload(2))
-            return(0x40, 0x20)
+            mstore(0x0, sload(2))
+            return(0x0, 0x20)
         }
     }
 
@@ -54,7 +54,7 @@ contract SunToken is IERC20 {
         bytes32 balanceLocation = keccak256(abi.encode(account, 0));
         
         assembly {
-            if iszero(and(account, 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff)){
+            if iszero(and(account, 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)){
                 revert(0, 0)
             }
 
@@ -69,7 +69,7 @@ contract SunToken is IERC20 {
         assembly {
             if iszero(and(
                 caller(), 
-                0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+                0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff
             )){
                 revert(0, 0)
             }
@@ -135,15 +135,15 @@ contract SunToken is IERC20 {
         bytes32 receiverLocation = keccak256(abi.encode(to, 0));
 
         assembly {
-            if iszero(and(caller(), 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff)){
+            if iszero(and(caller(), 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)){
                 revert(0, 0)
             }
 
-            if iszero(and(from, 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff)){
+            if iszero(and(from, 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)){
                 revert(0, 0)
             }
 
-            if iszero(and(to, 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff)){
+            if iszero(and(to, 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)){
                 revert(0, 0)
             }
 
@@ -187,11 +187,11 @@ contract SunToken is IERC20 {
         bytes32 allowanceLoc = keccak256(abi.encode(spender, keccak256(abi.encode(msg.sender, 1))));
 
         assembly {
-            if iszero(and(caller(), 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff)){
+            if iszero(and(caller(), 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)){
                 revert(0, 0)
             }
 
-            if iszero(and(spender, 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff)){
+            if iszero(and(spender, 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)){
                 revert(0, 0)
             }
 
@@ -210,11 +210,11 @@ contract SunToken is IERC20 {
         bytes32 allowanceLoc = keccak256(abi.encode(spender, keccak256(abi.encode(msg.sender, 1))));
 
         assembly {
-            if iszero(and(caller(), 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff)){
+            if iszero(and(caller(), 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)){
                 revert(0, 0)
             }
 
-            if iszero(and(spender, 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff)){
+            if iszero(and(spender, 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)){
                 revert(0, 0)
             }
 
@@ -233,7 +233,7 @@ contract SunToken is IERC20 {
         bytes32 balanceLocation = keccak256(abi.encode(account, 0));
         
         assembly {
-            if iszero(and(account, 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff)){
+            if iszero(and(account, 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)){
                 revert(0, 0)
             }
 
@@ -257,7 +257,7 @@ contract SunToken is IERC20 {
         bytes32 balanceLocation = keccak256(abi.encode(account, 0));
         
         assembly {
-            if iszero(and(account, 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff)){
+            if iszero(and(account, 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)){
                 revert(0, 0)
             }
 
