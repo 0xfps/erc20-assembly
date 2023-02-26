@@ -23,10 +23,9 @@ contract SunToken is IERC20 {
         // 0x53756e20546f6b656e
         // Sun Token
         assembly {
-            mstore(0x20, 0x20)
-            mstore(0x40, 0x09)
-            mstore(0x60, shl(mul(0x17, 8), 0x53756e20546f6b656e))
-            return(0x20, 0x60)
+            mstore(0x0, 0x20)
+            mstore(0x29, 0x0953756e20546f6b656e)
+            return(0x0, 0x60)
         }
     }
 
@@ -34,9 +33,8 @@ contract SunToken is IERC20 {
         // 0x2453544b4e
         // $STKN
         assembly {
-            mstore(0x20, 0x20)
-            mstore(0x40, 0x05)
-            mstore(0x60, shl(mul(0x1b, 8), 0x2453544b4e))
+            mstore(0x0, 0x20)
+            mstore(0x25, 0x052453544b4e)
             return(0x20, 0x60)
         }
     }
