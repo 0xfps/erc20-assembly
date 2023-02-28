@@ -54,10 +54,6 @@ contract SunToken is IERC20 {
         bytes32 balanceLocation = keccak256(abi.encode(account, 0));
         
         assembly {
-            if iszero(and(account, 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)){
-                revert(0, 0)
-            }
-
             bal := sload(balanceLocation)
         }
     }
@@ -68,7 +64,7 @@ contract SunToken is IERC20 {
 
         assembly {
             if iszero(and(
-                caller(), 
+                to, 
                 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff
             )){
                 revert(0, 0)
@@ -83,16 +79,18 @@ contract SunToken is IERC20 {
                 revert(0, 0)
             }
 
-            if lt(add(receiverBal, amount), receiverBal) {
+            let receiverAmount := add(receiverBal, amount)
+            if lt(receiverAmount, receiverBal) {
                 revert(0, 0)
             }
 
-            if gt(sub(senderBal, amount), senderBal) {
+            let senderAmount := sub(senderBal, amount)
+            if gt(senderAmount, senderBal) {
                 revert(0, 0)
             }
 
-            sstore(senderLocation, sub(senderBal, amount))
-            sstore(receiverLocation, add(receiverBal, amount))
+            sstore(senderLocation, senderAmount)
+            sstore(receiverLocation, receiverAmount)
             sent := 1
         }
     }
@@ -109,11 +107,7 @@ contract SunToken is IERC20 {
         bytes32 allowanceLoc = keccak256(abi.encode(spender, keccak256(abi.encode(msg.sender, 1))));
 
         assembly {
-            if iszero(and(caller(), 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff)){
-                revert(0, 0)
-            }
-
-            if iszero(and(spender, 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff)){
+            if iszero(and(spender, 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)){
                 revert(0, 0)
             }
 
@@ -135,10 +129,6 @@ contract SunToken is IERC20 {
         bytes32 receiverLocation = keccak256(abi.encode(to, 0));
 
         assembly {
-            if iszero(and(caller(), 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)){
-                revert(0, 0)
-            }
-
             if iszero(and(from, 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)){
                 revert(0, 0)
             }
@@ -153,7 +143,8 @@ contract SunToken is IERC20 {
                 revert(0, 0)
             }
 
-            if gt(sub(currentAllowance, amount), currentAllowance) {
+            let newAllowance := sub(currentAllowance, amount)
+            if gt(newAllowance, currentAllowance) {
                 revert(0, 0)
             }
 
@@ -166,19 +157,21 @@ contract SunToken is IERC20 {
                 revert(0, 0)
             }
 
-            if lt(add(receiverBal, amount), receiverBal) {
+            let newReceiverBal := add(receiverBal, amount)
+            if lt(newReceiverBal, receiverBal) {
                 revert(0, 0)
             }
 
-            if gt(sub(senderBal, amount), senderBal) {
+            let newSenderBal := sub(senderBal, amount)
+            if gt(newSenderBal, senderBal) {
                 revert(0, 0)
             }
 
-            sstore(senderLocation, sub(senderBal, amount))
-            sstore(receiverLocation, add(receiverBal, amount))
+            sstore(senderLocation, newSenderBal)
+            sstore(receiverLocation, newReceiverBal)
             
 
-            sstore(allowanceLoc, sub(currentAllowance, amount))
+            sstore(allowanceLoc, newAllowance)
             t := 1
         }
     }
@@ -187,21 +180,17 @@ contract SunToken is IERC20 {
         bytes32 allowanceLoc = keccak256(abi.encode(spender, keccak256(abi.encode(msg.sender, 1))));
 
         assembly {
-            if iszero(and(caller(), 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)){
-                revert(0, 0)
-            }
-
             if iszero(and(spender, 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)){
                 revert(0, 0)
             }
 
             let currentAllowance := sload(allowanceLoc)
-
-            if lt(add(currentAllowance, addedValue), currentAllowance) {
+            let newAllowance := add(currentAllowance, addedValue)
+            if lt(newAllowance, currentAllowance) {
                 revert(0, 0)
             }
 
-            sstore(allowanceLoc, add(currentAllowance, addedValue))
+            sstore(allowanceLoc, newAllowance)
             t := 1
         }
     }
@@ -210,21 +199,17 @@ contract SunToken is IERC20 {
         bytes32 allowanceLoc = keccak256(abi.encode(spender, keccak256(abi.encode(msg.sender, 1))));
 
         assembly {
-            if iszero(and(caller(), 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)){
-                revert(0, 0)
-            }
-
             if iszero(and(spender, 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)){
                 revert(0, 0)
             }
 
             let currentAllowance := sload(allowanceLoc)
-
-            if gt(sub(currentAllowance, subtractedValue), currentAllowance) {
+            let newAllowance := sub(currentAllowance, subtractedValue)
+            if gt(newAllowance, currentAllowance) {
                 revert(0, 0)
             }
 
-            sstore(allowanceLoc, add(currentAllowance, subtractedValue))
+            sstore(allowanceLoc, newAllowance)
             t := 1
         }
     }
