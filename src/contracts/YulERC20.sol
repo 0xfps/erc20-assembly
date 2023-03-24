@@ -3,49 +3,44 @@ pragma solidity =0.8.18;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-// keccak256(Transfer(address,address,uint256))
-bytes32 constant TransferEvent = 0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef;
-// keccak256(Approval(address,address,uint256))
-bytes32 constant ApprovalEvent = 0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925;
-
-uint256 constant TOTAL_SUPPLY = 5_000_000_000e18;
-address constant OWNER = 0x5e078E6b545cF88aBD5BB58d27488eF8BE0D2593;
-
 /**
-* @title YulERC20, a better version of SunToken.
-* @author Anthony (fps) https://github.com/0xfps.
-* @dev  YulERC20, ERC20, but entirely Yul.
-*       Name: YulERC20, 0x59756c4552433230, 0x08
-*       Symbol: $YERC, 0x2459455243, 0x05
-*       Decimals: 18
-* @notice It's a challenge to avoid one line of solidity inside functions.
-*/
+ * @title YulERC20, a better version of SunToken.
+ * @author Anthony (fps) https://github.com/0xfps.
+ * @dev  YulERC20, ERC20, but entirely Yul.
+ *       Name: YulERC20, 0x59756c4552433230, 0x08
+ *       Symbol: $YERC, 0x2459455243, 0x05
+ *       Decimals: 18
+ * @notice It's a challenge to avoid one line of solidity inside functions.
+ */
 
 contract YulERC20 is IERC20 {
-    mapping(address => uint256) private balances;
-    mapping(address => mapping (address => uint256)) private allowances;
+    // keccak256(Transfer(address,address,uint256))
+    bytes32 constant TransferEvent =
+        0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef;
+    // keccak256(Approval(address,address,uint256))
+    bytes32 constant ApprovalEvent =
+        0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925;
 
-    constructor() {
-        assembly {
-            mstore(0x00, OWNER)
-            mstore(0x20, 0x00)
-            sstore(keccak256(0x00, 0x40), TOTAL_SUPPLY)
-        }
-    }
+    uint256 constant TOTAL_SUPPLY = 5_000_000_000e18;
+
+    address constant OWNER = 0x5e078E6b545cF88aBD5BB58d27488eF8BE0D2593;
+
+    mapping(address => uint256) private balances;
+    mapping(address => mapping(address => uint256)) private allowances;
 
     function name() public pure returns (string memory) {
         assembly {
-            mstore(0xa0, 0x20)
-            mstore(0xc8, 0x0859756c4552433230)
-            return(0xa0, 0x60)
+            mstore(0x00, 0x20)
+            mstore(0x28, 0x0859756c4552433230)
+            return(0x00, 0x60)
         }
     }
 
     function symbol() public pure returns (string memory) {
         assembly {
-            mstore(0xa0, 0x20)
-            mstore(0xc5, 0x052459455243)
-            return(0xa0, 0x60)
+            mstore(0x00, 0x20)
+            mstore(0x25, 0x052459455243)
+            return(0x00, 0x60)
         }
     }
 
@@ -85,13 +80,19 @@ contract YulERC20 is IERC20 {
             let amount := calldataload(0x24)
 
             if iszero(
-            and(caller(), 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)
+                and(
+                    caller(),
+                    0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff
+                )
             ) {
                 revert(0x00, 0x00)
             }
 
             if iszero(
-                and(to, 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)
+                and(
+                    to,
+                    0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff
+                )
             ) {
                 revert(0x00, 0x00)
             }
@@ -127,13 +128,19 @@ contract YulERC20 is IERC20 {
             let amount := calldataload(0x24)
 
             if iszero(
-            and(caller(), 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)
+                and(
+                    caller(),
+                    0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff
+                )
             ) {
                 revert(0x00, 0x00)
             }
 
             if iszero(
-            and(spender, 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)
+                and(
+                    spender,
+                    0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff
+                )
             ) {
                 revert(0x00, 0x00)
             }
@@ -183,13 +190,19 @@ contract YulERC20 is IERC20 {
             let spender := caller()
 
             if iszero(
-            and(owner, 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)
+                and(
+                    owner,
+                    0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff
+                )
             ) {
                 revert(0x00, 0x00)
             }
 
             if iszero(
-            and(to, 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)
+                and(
+                    to,
+                    0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff
+                )
             ) {
                 revert(0x00, 0x00)
             }
@@ -242,7 +255,10 @@ contract YulERC20 is IERC20 {
             let amount := calldataload(0x04)
 
             if iszero(
-            and(from, 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)
+                and(
+                    from,
+                    0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff
+                )
             ) {
                 revert(0x00, 0x00)
             }

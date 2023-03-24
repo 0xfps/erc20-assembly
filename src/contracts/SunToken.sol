@@ -40,7 +40,10 @@ contract SunToken is IERC20 {
     }
 
     function decimals() public pure returns (uint8) {
-        return 18;
+        assembly {
+            mstore(0x00, 0x12)
+            return(0x00, 0x20)
+        }
     }
 
     function totalSupply() public view returns (uint256) {
@@ -52,7 +55,7 @@ contract SunToken is IERC20 {
 
     function balanceOf(address account) public view returns (uint256 bal) {
         bytes32 balanceLocation = keccak256(abi.encode(account, 0));
-        
+
         assembly {
             bal := sload(balanceLocation)
         }
@@ -63,10 +66,12 @@ contract SunToken is IERC20 {
         bytes32 receiverLocation = keccak256(abi.encode(to, 0));
 
         assembly {
-            if iszero(and(
-                to, 
-                0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff
-            )){
+            if iszero(
+                and(
+                    to,
+                    0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff
+                )
+            ) {
                 revert(0, 0)
             }
 
@@ -95,8 +100,13 @@ contract SunToken is IERC20 {
         }
     }
 
-    function allowance(address owner, address spender) public view returns (uint256 all) {
-        bytes32 allowanceLoc = keccak256(abi.encode(spender, keccak256(abi.encode(owner, 1))));
+    function allowance(
+        address owner,
+        address spender
+    ) public view returns (uint256 all) {
+        bytes32 allowanceLoc = keccak256(
+            abi.encode(spender, keccak256(abi.encode(owner, 1)))
+        );
 
         assembly {
             all := sload(allowanceLoc)
@@ -104,10 +114,17 @@ contract SunToken is IERC20 {
     }
 
     function approve(address spender, uint256 amount) public returns (bool t) {
-        bytes32 allowanceLoc = keccak256(abi.encode(spender, keccak256(abi.encode(msg.sender, 1))));
+        bytes32 allowanceLoc = keccak256(
+            abi.encode(spender, keccak256(abi.encode(msg.sender, 1)))
+        );
 
         assembly {
-            if iszero(and(spender, 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)){
+            if iszero(
+                and(
+                    spender,
+                    0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff
+                )
+            ) {
                 revert(0, 0)
             }
 
@@ -122,18 +139,34 @@ contract SunToken is IERC20 {
         }
     }
 
-    function transferFrom(address from, address to, uint256 amount) public returns (bool t) {
-        bytes32 allowanceLoc = keccak256(abi.encode(msg.sender, keccak256(abi.encode(from, 1))));
+    function transferFrom(
+        address from,
+        address to,
+        uint256 amount
+    ) public returns (bool t) {
+        bytes32 allowanceLoc = keccak256(
+            abi.encode(msg.sender, keccak256(abi.encode(from, 1)))
+        );
 
         bytes32 senderLocation = keccak256(abi.encode(from, 0));
         bytes32 receiverLocation = keccak256(abi.encode(to, 0));
 
         assembly {
-            if iszero(and(from, 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)){
+            if iszero(
+                and(
+                    from,
+                    0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff
+                )
+            ) {
                 revert(0, 0)
             }
 
-            if iszero(and(to, 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)){
+            if iszero(
+                and(
+                    to,
+                    0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff
+                )
+            ) {
                 revert(0, 0)
             }
 
@@ -169,18 +202,27 @@ contract SunToken is IERC20 {
 
             sstore(senderLocation, newSenderBal)
             sstore(receiverLocation, newReceiverBal)
-            
 
             sstore(allowanceLoc, newAllowance)
             t := 1
         }
     }
 
-    function increaseAllowance(address spender, uint256 addedValue) public returns (bool t) {
-        bytes32 allowanceLoc = keccak256(abi.encode(spender, keccak256(abi.encode(msg.sender, 1))));
+    function increaseAllowance(
+        address spender,
+        uint256 addedValue
+    ) public returns (bool t) {
+        bytes32 allowanceLoc = keccak256(
+            abi.encode(spender, keccak256(abi.encode(msg.sender, 1)))
+        );
 
         assembly {
-            if iszero(and(spender, 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)){
+            if iszero(
+                and(
+                    spender,
+                    0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff
+                )
+            ) {
                 revert(0, 0)
             }
 
@@ -195,11 +237,21 @@ contract SunToken is IERC20 {
         }
     }
 
-    function decreaseAllowance(address spender, uint256 subtractedValue) public returns (bool t) {
-        bytes32 allowanceLoc = keccak256(abi.encode(spender, keccak256(abi.encode(msg.sender, 1))));
+    function decreaseAllowance(
+        address spender,
+        uint256 subtractedValue
+    ) public returns (bool t) {
+        bytes32 allowanceLoc = keccak256(
+            abi.encode(spender, keccak256(abi.encode(msg.sender, 1)))
+        );
 
         assembly {
-            if iszero(and(spender, 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)){
+            if iszero(
+                and(
+                    spender,
+                    0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff
+                )
+            ) {
                 revert(0, 0)
             }
 
@@ -216,9 +268,14 @@ contract SunToken is IERC20 {
 
     function _mint(address account, uint256 amount) internal {
         bytes32 balanceLocation = keccak256(abi.encode(account, 0));
-        
+
         assembly {
-            if iszero(and(account, 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)){
+            if iszero(
+                and(
+                    account,
+                    0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff
+                )
+            ) {
                 revert(0, 0)
             }
 
@@ -240,9 +297,14 @@ contract SunToken is IERC20 {
 
     function _burn(address account, uint256 amount) internal virtual {
         bytes32 balanceLocation = keccak256(abi.encode(account, 0));
-        
+
         assembly {
-            if iszero(and(account, 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)){
+            if iszero(
+                and(
+                    account,
+                    0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff
+                )
+            ) {
                 revert(0, 0)
             }
 
