@@ -9,7 +9,7 @@ bytes32 constant TransferEvent = 0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a
 bytes32 constant ApprovalEvent = 0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925;
 
 uint256 constant TOTAL_SUPPLY = 5_000_000_000e18;
-address constant OWNER = 0x5B38Da6a701c568545dCfcB03FcB875f56beddC4;
+address constant OWNER = 0x5e078E6b545cF88aBD5BB58d27488eF8BE0D2593;
 
 /**
 * @title YulERC20, a better version of SunToken.
