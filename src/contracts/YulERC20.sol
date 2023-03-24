@@ -8,7 +8,8 @@ bytes32 constant TransferEvent = 0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a
 // keccak256(Approval(address,address,uint256))
 bytes32 constant ApprovalEvent = 0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925;
 
-uint256 constant _totalSupply = 5_000_000_000e18;
+uint256 constant TOTAL_SUPPLY = 5_000_000_000e18;
+address constant OWNER = 0x5B38Da6a701c568545dCfcB03FcB875f56beddC4;
 
 /**
 * @title YulERC20, a better version of SunToken.
@@ -23,6 +24,14 @@ uint256 constant _totalSupply = 5_000_000_000e18;
 contract YulERC20 is IERC20 {
     mapping(address => uint256) private balances;
     mapping(address => mapping (address => uint256)) private allowances;
+
+    constructor() {
+        assembly {
+            mstore(0x00, OWNER)
+            mstore(0x20, 0x00)
+            sstore(keccak256(0x00, 0x40), TOTAL_SUPPLY)
+        }
+    }
 
     function name() public pure returns (string memory) {
         assembly {
@@ -49,7 +58,7 @@ contract YulERC20 is IERC20 {
 
     function totalSupply() public pure returns (uint256) {
         assembly {
-            mstore(0x00, _totalSupply)
+            mstore(0x00, TOTAL_SUPPLY)
             return(0x00, 0x20)
         }
     }
@@ -76,6 +85,12 @@ contract YulERC20 is IERC20 {
             let amount := calldataload(0x24)
 
             if iszero(
+            and(caller(), 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)
+            ) {
+                revert(0x00, 0x00)
+            }
+
+            if iszero(
                 and(to, 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)
             ) {
                 revert(0x00, 0x00)
@@ -95,10 +110,6 @@ contract YulERC20 is IERC20 {
                 revert(0x00, 0x00)
             }
 
-            if lt(add(toBalance, amount), toBalance) {
-                revert(0x00, 0x00)
-            }
-
             sstore(toSlot, add(sload(toSlot), amount))
             sstore(callerSlot, sub(sload(callerSlot), amount))
 
@@ -114,6 +125,12 @@ contract YulERC20 is IERC20 {
         assembly {
             let spender := calldataload(0x04)
             let amount := calldataload(0x24)
+
+            if iszero(
+            and(caller(), 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)
+            ) {
+                revert(0x00, 0x00)
+            }
 
             if iszero(
             and(spender, 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)
@@ -207,16 +224,48 @@ contract YulERC20 is IERC20 {
                 revert(0x00, 0x00)
             }
 
-            if lt(add(toBalance, amount), toBalance) {
-                revert(0x00, 0x00)
-            }
-
             sstore(fullAllowanceSlot, sub(fullAllowance, amount))
             sstore(toBalanceSlot, add(sload(toBalanceSlot), amount))
             sstore(ownerBalanceSlot, sub(sload(ownerBalanceSlot), amount))
 
             mstore(0x00, amount)
             log3(0x00, 0x20, TransferEvent, owner, to)
+
+            mstore(0x00, 0x01)
+            return(0x00, 0x20)
+        }
+    }
+
+    function burn(uint256) public returns (bool) {
+        assembly {
+            let from := caller()
+            let amount := calldataload(0x04)
+
+            if iszero(
+            and(from, 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff)
+            ) {
+                revert(0x00, 0x00)
+            }
+
+            mstore(0x00, from)
+            mstore(0x20, 0x00)
+            let fromSlot := keccak256(0x00, 0x40)
+            let fromBalance := sload(fromSlot)
+
+            mstore(0x00, OWNER)
+            mstore(0x20, 0x00)
+            let toSlot := keccak256(0x00, 0x40)
+            let toBalance := sload(toSlot)
+
+            if lt(fromBalance, amount) {
+                revert(0x00, 0x00)
+            }
+
+            sstore(toSlot, add(sload(toSlot), amount))
+            sstore(fromSlot, sub(sload(fromSlot), amount))
+
+            mstore(0x00, amount)
+            log3(0x00, 0x20, TransferEvent, from, OWNER)
 
             mstore(0x00, 0x01)
             return(0x00, 0x20)
