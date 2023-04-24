@@ -3,14 +3,6 @@ pragma solidity =0.8.18;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-// keccak256(Transfer(address,address,uint256))
-bytes32 constant TRANSFER_EVENT = 0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef;
-// keccak256(Approval(address,address,uint256))
-bytes32 constant APPROVAL_EVENT = 0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925;
-
-uint256 constant TOTAL_SUPPLY = 5_000_000_000e18;
-address constant OWNER = 0x5e078E6b545cF88aBD5BB58d27488eF8BE0D2593;
-
 /**
 * @title YulERC20, a better version of SunToken.
 * @author Anthony (fps) https://github.com/0xfps.
@@ -20,6 +12,14 @@ address constant OWNER = 0x5e078E6b545cF88aBD5BB58d27488eF8BE0D2593;
 *       Decimals: 18
 * @notice It's a challenge to avoid one line of solidity inside functions.
 */
+
+// keccak256(Transfer(address,address,uint256))
+bytes32 constant TRANSFER_EVENT = 0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef;
+// keccak256(Approval(address,address,uint256))
+bytes32 constant APPROVAL_EVENT = 0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925;
+
+uint256 constant TOTAL_SUPPLY = 5_000_000_000e18;
+address constant OWNER = 0x5e078E6b545cF88aBD5BB58d27488eF8BE0D2593;
 
 contract YulERC20 is IERC20 {
     mapping(address => uint256) private balances;
